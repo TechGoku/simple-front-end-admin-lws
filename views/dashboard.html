@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beldex Dashboard</title>
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --text: #ffffff;
+      --accent: #00e676;
+      --card-bg: #1a1a1a;
+      --input-bg: #2b2b2b;
+      --hover: #00c85a;
+    }
+
+    body.light {
+      --bg: #f2f2f2;
+      --text: #000;
+      --accent: #00994d;
+      --card-bg: #fff;
+      --input-bg: #e0e0e0;
+      --hover: #007a3d;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h1 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .tab-btn {
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 10px 20px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .section.active {
+      display: block;
+      opacity: 1;
+    }
+
+    form {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0, 230, 118, 0.1);
+      transition: background 0.3s;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      margin: 10px 0 20px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 15px;
+      transition: background 0.3s;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button.submit-btn {
+      background-color: var(--accent);
+      color: var(--bg);
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button.submit-btn:hover {
+      background-color: var(--hover);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: var(--card-bg);
+      color: var(--text);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #333;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2c2c2c;
+      color: var(--accent);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #777;
+    }
+
+    .logout-form {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .logout-form button {
+      background-color: #ef5350;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #1d1d1d;
+      padding: 15px;
+      border-radius: 6px;
+      color: #eee;
+      overflow-x: auto;
+    }
+
+    #confirmationModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow: auto;
+      padding: 20px;
+    }
+
+    #confirmationModal .modal-box {
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+      word-break: break-word;
+    }
+
+    #confirmationModal button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #confirmBtn {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    #cancelBtn {
+      background: #888;
+      color: #fff;
+    }
+
+    .theme-toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle-btn" id="themeToggle">Toggle Theme</button>
+
+  <h1>Beldex Admin Dashboard</h1>
+
+  <div class="logout-form">
+    <form action="/logout" method="GET">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="list">List Accounts</button>
+    <button class="tab-btn" data-tab="add">Add Account</button>
+    <button class="tab-btn" data-tab="rescan">Rescan</button>
+    <button class="tab-btn" data-tab="modify-status">Modify Status</button>
+  </div>
+
+  <div class="section active" id="list">
+    <button class="submit-btn" onclick="fetchAccounts()">Fetch Accounts</button>
+    <div id="accountsResult"></div>
+  </div>
+
+  <div class="section" id="add">
+    <form onsubmit="confirmSubmit(event, 'add')">
+      <label>Address:</label>
+      <input type="text" id="address" required />
+      <label>Key:</label>
+      <input type="text" id="key" required />
+      <button type="submit" class="submit-btn">Add Account</button>
+    </form>
+    <pre id="addResult"></pre>
+  </div>
+
+  <div class="section" id="rescan">
+    <form onsubmit="confirmSubmit(event, 'rescan')">
+      <label>Start Height:</label>
+      <input type="number" id="height" required />
+      <label>Addresses (comma-separated):</label>
+      <textarea id="addresses" rows="4" required></textarea>
+      <button type="submit" class="submit-btn">Rescan</button>
+    </form>
+    <pre id="rescanResult"></pre>
+  </div>
+
+  <div class="section" id="modify-status">
+    <form onsubmit="confirmSubmit(event, 'modify')">
+      <label>Addresses (comma-separated):</label>
+      <textarea id="status-addresses" rows="4" required></textarea>
+      <label>Select Status:</label>
+      <select id="status-select" required>
+        <option value="active">Active</option>
+        <option value="hidden">Hidden</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      <button type="submit" class="submit-btn">Update Status</button>
+    </form>
+    <pre id="modifyStatusResult"></pre>
+  </div>
+
+  <div class="footer">© 2025 Beldex Network</div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal">
+    <div class="modal-box">
+      <h3>Confirm Action</h3>
+      <div id="modalContent"></div>
+      <div style="text-align:right; margin-top: 15px;">
+        <button id="cancelBtn">Cancel</button>
+        <button id="confirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.section');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    async function fetchAccounts() {
+      const res = await fetch('/list-accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      const container = document.getElementById('accountsResult');
+      container.innerHTML = '';
+
+      for (const [status, accounts] of Object.entries(data)) {
+        if (!Array.isArray(accounts)) continue;
+
+        const title = document.createElement('h3');
+        title.textContent = status.toUpperCase();
+        container.appendChild(title);
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        thead.innerHTML = `<tr><th>Address</th><th>Scan Height</th><th>Access Time</th></tr>`;
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        accounts.forEach(account => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${account.address}</td>
+            <td>${account.scan_height}</td>
+            <td>${new Date(account.access_time * 1000).toLocaleString()}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+      }
+    }
+
+    function confirmSubmit(e, type) {
+      e.preventDefault();
+
+      let payload = {};
+      let resultId = '';
+
+      if (type === 'add') {
+        payload = {
+          address: document.getElementById('address').value,
+          key: document.getElementById('key').value
+        };
+        resultId = 'addResult';
+      } else if (type === 'rescan') {
+        payload = {
+          height: parseInt(document.getElementById('height').value),
+          addresses: document.getElementById('addresses').value.split(',').map(a => a.trim())
+        };
+        resultId = 'rescanResult';
+      } else if (type === 'modify') {
+        payload = {
+          status: document.getElementById('status-select').value,
+          addresses: document.getElementById('status-addresses').value.split(',').map(a => a.trim())
+        };
+        resultId = 'modifyStatusResult';
+      }
+
+      const modal = document.getElementById('confirmationModal');
+      const content = document.getElementById('modalContent');
+      content.innerHTML = Object.entries(payload).map(([k, v]) => `<p><b>${k}:</b> ${Array.isArray(v) ? v.join(', ') : v}</p>`).join('');
+
+      modal.style.display = 'flex';
+
+      document.getElementById('cancelBtn').onclick = () => modal.style.display = 'none';
+
+      document.getElementById('confirmBtn').onclick = async () => {
+        modal.style.display = 'none';
+        const endpointMap = {
+          add: '/add-account',
+          rescan: '/rescan',
+          modify: '/modify-account-status'
+        };
+
+        const res = await fetch(endpointMap[type], {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        document.getElementById(resultId).textContent = JSON.stringify(data, null, 2);
+      };
+    }
+  </script>
+
+  <script>
+    // Theme toggle
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+  </script>
+
+</body>
+</html>

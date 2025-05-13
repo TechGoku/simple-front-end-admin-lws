@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Beldex Admin</title>
+  <style>
+    body {
+      background-color: #0e0e0e;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background: #1b1b1b;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 230, 118, 0.15);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      color: #00e676;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #2a2a2a;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00e676;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00c85a;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <form id="loginForm">
+      <h1>Beldex Admin</h1>
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div class="footer">© 2025 Beldex Network</div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const passwordRaw = document.getElementById('password').value;
+      const password = btoa(passwordRaw); // base64 encode
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (res.redirected) {
+        window.location.href = res.url;
+      } else {
+        const text = await res.text();
+        document.body.innerHTML = text;
+      }
+    });
+  </script>
+</body>
+</html>
