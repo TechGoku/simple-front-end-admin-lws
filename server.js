@@ -7,7 +7,7 @@ const session = require('express-session');
 
 dotenv.config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.FRONEND_PORT;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -81,8 +81,8 @@ app.get('/dashboard', isAuthenticated, (req, res) => {
 // Fetch account list
 app.post('/list-accounts', isAuthenticated, async (req, res) => {
   try {
-    const response = await axios.post('http://127.0.0.1:1111/list_accounts', {
-      auth: process.env.LOGIN_SECRET
+    const response = await axios.post(process.env.ADMIN_SERVER_ADDRESS+'/list_accounts', {
+      auth: process.env.AUTH_KEY
     });
     res.json(response.data);
   } catch (err) {
@@ -95,9 +95,9 @@ app.post('/list-accounts', isAuthenticated, async (req, res) => {
 app.post('/add-account', isAuthenticated, async (req, res) => {
   const { address, key } = req.body;
   try {
-    const response = await axios.post('http://127.0.0.1:1111/add_account', {
+    const response = await axios.post(process.env.ADMIN_SERVER_ADDRESS+'/add_account', {
       params: { address, key },
-      auth: process.env.LOGIN_SECRET
+      auth: process.env.AUTH_KEY
     });
     res.json(response.data);
   } catch (err) {
@@ -110,12 +110,12 @@ app.post('/add-account', isAuthenticated, async (req, res) => {
 app.post('/rescan', isAuthenticated, async (req, res) => {
   const { height, addresses } = req.body;
   try {
-    const response = await axios.post('http://127.0.0.1:1111/rescan', {
+    const response = await axios.post(process.env.ADMIN_SERVER_ADDRESS+'/rescan', {
       params: {
         height,
         addresses
       },
-      auth: process.env.LOGIN_SECRET
+      auth: process.env.AUTH_KEY
     });
     res.json(response.data);
   } catch (err) {
@@ -128,12 +128,12 @@ app.post('/rescan', isAuthenticated, async (req, res) => {
 app.post('/modify-account-status', isAuthenticated, async (req, res) => {
   const { status, addresses } = req.body;
   try {
-    const response = await axios.post('http://127.0.0.1:1111/modify_account_status', {
+    const response = await axios.post(process.env.ADMIN_SERVER_ADDRESS+'/modify_account_status', {
       params: {
         status,
         addresses
       },
-      auth: process.env.LOGIN_SECRET
+      auth: process.env.AUTH_KEY
     });
     res.json(response.data);
   } catch (err) {
