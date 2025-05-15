@@ -57,7 +57,3 @@ simple-front-end-admin-lws/
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## 🙌 Acknowledgments
-
-This project was developed as part of the Learn with Sumit (LWS) initiative.
